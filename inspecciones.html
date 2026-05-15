@@ -1,0 +1,1011 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>EA Ingenierías — Inspecciones</title>
+  <meta name="theme-color" content="#1B2559">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="EA Insp.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.7.0/dist/tabler-icons.min.css">
+  <style>
+    :root {
+      --navy:     #1B2559;
+      --blue:     #2563EB;
+      --blue2:    #1D4ED8;
+      --blue-lt:  #EFF6FF;
+      --text:     #0F172A;
+      --text2:    #475569;
+      --text3:    #94A3B8;
+      --bg:       #F8FAFC;
+      --bg2:      #FFFFFF;
+      --bg3:      #F1F5F9;
+      --border:   #E2E8F0;
+      --border2:  #CBD5E1;
+      --green:    #10B981;
+      --green-lt: #ECFDF5;
+      --amber:    #F59E0B;
+      --amber-lt: #FFFBEB;
+      --red:      #EF4444;
+      --red-lt:   #FEF2F2;
+      --orange:   #F97316;
+      --orange-lt:#FFF7ED;
+      --radius:   10px;
+      --radius-lg:14px;
+      --shadow:   0 1px 3px rgba(0,0,0,.08), 0 1px 2px rgba(0,0,0,.04);
+      --shadow-md:0 4px 12px rgba(0,0,0,.08);
+      --shadow-lg:0 10px 30px rgba(0,0,0,.1);
+      --sidebar:  256px;
+    }
+    body.dark {
+      --blue:     #3B82F6;
+      --blue-lt:  #1E293B;
+      --text:     #F1F5F9;
+      --text2:    #94A3B8;
+      --text3:    #475569;
+      --bg:       #0F172A;
+      --bg2:      #1E293B;
+      --bg3:      #162032;
+      --border:   #1E293B;
+      --border2:  #334155;
+      --green:    #34D399;
+      --green-lt: #064E3B;
+      --amber:    #FBBF24;
+      --amber-lt: #451A03;
+      --red:      #F87171;
+      --red-lt:   #450A0A;
+      --orange:   #FB923C;
+      --orange-lt:#431407;
+    }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    html,body{height:100%}
+    body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--text);font-size:13.5px;line-height:1.5}
+    #app{display:flex;min-height:100vh}
+
+    /* SIDEBAR */
+    .sidebar{width:var(--sidebar);min-height:100vh;background:var(--navy);display:flex;flex-direction:column;position:fixed;top:0;left:0;bottom:0;z-index:100;box-shadow:4px 0 24px rgba(0,0,0,.15)}
+    .sidebar-logo{padding:1.25rem 1.1rem 1rem;border-bottom:1px solid rgba(255,255,255,.08);display:flex;align-items:center;gap:10px}
+    .logo-img{width:34px;height:34px;object-fit:contain;flex-shrink:0}
+    .logo-text{font-size:13px;font-weight:700;color:#fff}
+    .logo-sub{font-size:10px;color:rgba(255,255,255,.4);margin-top:1px}
+    .sidebar-section{padding:.6rem .75rem}
+    .sidebar-label{font-size:10px;font-weight:600;color:rgba(255,255,255,.3);letter-spacing:.1em;text-transform:uppercase;padding:.6rem .5rem .35rem}
+    .nav-item{display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:8px;cursor:pointer;color:rgba(255,255,255,.55);font-size:13px;transition:all .15s;margin-bottom:2px;text-decoration:none}
+    .nav-item:hover{color:#fff;background:rgba(255,255,255,.08)}
+    .nav-item.active{color:#fff;background:rgba(255,255,255,.14);font-weight:500}
+    .nav-item i{font-size:16px;flex-shrink:0}
+    .sidebar-bottom{margin-top:auto;padding:.85rem .75rem;border-top:1px solid rgba(255,255,255,.08)}
+    .user-row{display:flex;align-items:center;gap:8px;padding:8px;border-radius:8px;cursor:pointer;transition:background .15s}
+    .user-row:hover{background:rgba(255,255,255,.08)}
+    .avatar{width:30px;height:30px;border-radius:8px;background:rgba(255,255,255,.15);display:flex;align-items:center;justify-content:center;color:#fff;font-size:11px;font-weight:700;flex-shrink:0}
+    .user-name{font-size:12.5px;font-weight:500;color:#fff}
+    .user-role{font-size:10px;color:rgba(255,255,255,.4)}
+
+    /* MAIN */
+    .main{margin-left:var(--sidebar);flex:1;display:flex;flex-direction:column;min-height:100vh}
+    .topbar{height:56px;background:var(--bg2);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 1.5rem;gap:10px;position:sticky;top:0;z-index:50;box-shadow:var(--shadow)}
+    .menu-btn{display:none;background:none;border:none;cursor:pointer;color:var(--text2);font-size:20px;padding:4px;margin-right:4px}
+    .page-title{font-size:16px;font-weight:700;color:var(--text)}
+    .topbar-right{margin-left:auto;display:flex;align-items:center;gap:8px}
+    .content{padding:1.5rem}
+
+    /* BUTTONS */
+    .btn{padding:7px 14px;border-radius:var(--radius);border:1px solid var(--border2);background:var(--bg2);font-size:13px;cursor:pointer;color:var(--text2);display:inline-flex;align-items:center;gap:6px;transition:all .15s;font-family:'Inter',sans-serif;font-weight:500;box-shadow:var(--shadow)}
+    .btn:hover{background:var(--bg3);color:var(--text)}
+    .btn.primary{background:var(--blue);color:#fff;border-color:var(--blue);box-shadow:0 2px 8px rgba(37,99,235,.3)}
+    .btn.primary:hover{background:var(--blue2)}
+    .btn.sm{padding:5px 10px;font-size:12px}
+    .btn.ghost{background:transparent;border-color:transparent;box-shadow:none}
+    .btn.ghost:hover{background:var(--bg3)}
+    .btn.danger{color:var(--red);background:transparent;border-color:transparent;box-shadow:none}
+    .btn.danger:hover{background:var(--red-lt)}
+    .btn.success{background:var(--green);color:#fff;border-color:var(--green)}
+    .btn.warning{background:var(--amber);color:#fff;border-color:var(--amber)}
+
+    /* CARDS */
+    .card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.25rem;margin-bottom:1rem;box-shadow:var(--shadow)}
+    .card-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem}
+    .card-title{font-size:14px;font-weight:600;color:var(--text);display:flex;align-items:center;gap:8px}
+    .card-title i{color:var(--blue)}
+
+    /* METRICS */
+    .metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-bottom:1.25rem}
+    .metric{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1rem 1.25rem;box-shadow:var(--shadow)}
+    .metric-icon{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;margin-bottom:.75rem}
+    .metric-icon.blue{background:var(--blue-lt);color:var(--blue)}
+    .metric-icon.green{background:var(--green-lt);color:var(--green)}
+    .metric-icon.amber{background:var(--amber-lt);color:var(--amber)}
+    .metric-icon.red{background:var(--red-lt);color:var(--red)}
+    .metric-icon.orange{background:var(--orange-lt);color:var(--orange)}
+    .mlabel{font-size:11.5px;color:var(--text3);margin-bottom:4px;font-weight:500}
+    .mval{font-size:22px;font-weight:700;color:var(--text);letter-spacing:-.5px}
+    .msub{font-size:11px;color:var(--text3);margin-top:4px}
+
+    /* BADGES */
+    .badge{display:inline-flex;align-items:center;gap:3px;padding:3px 9px;border-radius:20px;font-size:11px;font-weight:600;white-space:nowrap}
+    .b-urgente{background:var(--red-lt);color:var(--red)}
+    .b-normal{background:var(--amber-lt);color:#92400E}
+    .b-programado{background:var(--blue-lt);color:var(--blue)}
+    .b-detectado{background:var(--orange-lt);color:var(--orange)}
+    .b-proceso{background:var(--amber-lt);color:#92400E}
+    .b-resuelto{background:var(--green-lt);color:var(--green)}
+    body.dark .b-normal{color:var(--amber)}
+
+    /* FORM */
+    .fg{margin-bottom:.85rem}
+    .fg label{display:block;font-size:12px;color:var(--text2);margin-bottom:5px;font-weight:600}
+    .fg input,.fg select,.fg textarea{width:100%;padding:8px 11px;border:1px solid var(--border2);border-radius:var(--radius);background:var(--bg2);color:var(--text);font-size:13px;font-family:'Inter',sans-serif;transition:border-color .15s,box-shadow .15s}
+    .fg input:focus,.fg select:focus,.fg textarea:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 3px rgba(37,99,235,.1)}
+    .fg textarea{resize:vertical;min-height:72px}
+    .fgr{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    .fgr3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+    .fa{display:flex;gap:8px;justify-content:flex-end;margin-top:1.1rem;padding-top:1rem;border-top:1px solid var(--border)}
+
+    /* MODAL */
+    .mwrap{display:none;position:fixed;inset:0;background:rgba(15,23,42,.6);backdrop-filter:blur(4px);z-index:200;align-items:center;justify-content:center;padding:1rem}
+    .mwrap.open{display:flex}
+    .modal{background:var(--bg2);border-radius:var(--radius-lg);border:1px solid var(--border);padding:1.5rem;width:560px;max-width:100%;max-height:92vh;overflow-y:auto;box-shadow:var(--shadow-lg)}
+    .modal.wide{width:700px}
+    .mtitle{font-size:16px;font-weight:700;margin-bottom:1.25rem;display:flex;align-items:center;justify-content:space-between;color:var(--text)}
+
+    /* INSPECCION CARD */
+    .insp-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.1rem 1.25rem;margin-bottom:.85rem;box-shadow:var(--shadow);transition:box-shadow .2s,transform .2s;cursor:pointer}
+    .insp-card:hover{box-shadow:var(--shadow-md);transform:translateY(-1px)}
+    .insp-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:.75rem}
+    .insp-title{font-size:14px;font-weight:700;color:var(--text)}
+    .insp-meta{font-size:11.5px;color:var(--text3);margin-top:3px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+    .insp-items{display:flex;gap:6px;flex-wrap:wrap;margin-top:.6rem}
+
+    /* HALLAZGO CARD */
+    .hall-card{background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius);padding:.9rem 1rem;margin-bottom:.6rem;display:flex;gap:12px}
+    .hall-foto{width:60px;height:60px;border-radius:8px;object-fit:cover;flex-shrink:0;background:var(--border);display:flex;align-items:center;justify-content:center;color:var(--text3);font-size:20px;overflow:hidden;cursor:pointer}
+    .hall-foto img{width:100%;height:100%;object-fit:cover}
+    .hall-info{flex:1;min-width:0}
+    .hall-titulo{font-size:13px;font-weight:600;color:var(--text)}
+    .hall-desc{font-size:12px;color:var(--text2);margin-top:2px;line-height:1.5}
+    .hall-tags{display:flex;gap:5px;margin-top:6px;flex-wrap:wrap}
+
+    /* FOTO UPLOAD */
+    .foto-upload{border:2px dashed var(--border2);border-radius:var(--radius);padding:1.5rem;text-align:center;cursor:pointer;transition:all .2s;color:var(--text3);background:var(--bg3)}
+    .foto-upload:hover{border-color:var(--blue);background:var(--blue-lt);color:var(--blue)}
+    .fotos-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:8px}
+    .foto-thumb{position:relative;aspect-ratio:1;border-radius:8px;overflow:hidden;background:var(--border)}
+    .foto-thumb img{width:100%;height:100%;object-fit:cover}
+    .foto-del{position:absolute;top:3px;right:3px;width:20px;height:20px;border-radius:50%;background:rgba(0,0,0,.6);border:none;cursor:pointer;color:#fff;font-size:11px;display:flex;align-items:center;justify-content:center}
+
+    /* COTIZACION */
+    .cotiz-item{display:flex;gap:10px;align-items:flex-start;padding:.75rem;background:var(--bg3);border-radius:var(--radius);margin-bottom:.5rem;border:1px solid var(--border)}
+    .cotiz-num{width:24px;height:24px;border-radius:50%;background:var(--blue);color:#fff;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;margin-top:2px}
+
+    /* GRID */
+    .grid2{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+
+    /* SCROLLBAR */
+    ::-webkit-scrollbar{width:5px;height:5px}
+    ::-webkit-scrollbar-track{background:transparent}
+    ::-webkit-scrollbar-thumb{background:var(--border2);border-radius:4px}
+
+    /* SIDEBAR OVERLAY + BOTTOM NAV */
+    .sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:99}
+    .sidebar-overlay.open{display:block}
+    .bottom-nav{display:none;position:fixed;bottom:0;left:0;right:0;background:var(--bg2);border-top:1px solid var(--border);z-index:90;padding:6px 0 max(6px,env(safe-area-inset-bottom));justify-content:space-around;align-items:center}
+    .bnav-item{display:flex;flex-direction:column;align-items:center;gap:2px;padding:5px 8px;cursor:pointer;color:var(--text3);font-size:9.5px;font-weight:600;border:none;background:none;font-family:'Inter',sans-serif;min-width:52px}
+    .bnav-item i{font-size:20px}
+    .bnav-item.active{color:var(--blue)}
+
+    @media(max-width:768px){
+      .sidebar{transform:translateX(-100%);transition:transform .25s ease}
+      .sidebar.open{transform:translateX(0)}
+      .main{margin-left:0}
+      .metrics{grid-template-columns:1fr 1fr}
+      .grid2{grid-template-columns:1fr}
+      .fgr{grid-template-columns:1fr}
+      .fgr3{grid-template-columns:1fr}
+      .menu-btn{display:block}
+      .bottom-nav{display:flex}
+      .content{padding:1rem;padding-bottom:80px}
+      .topbar{padding:0 1rem}
+      .modal{width:100%;max-height:88vh;border-radius:var(--radius-lg) var(--radius-lg) 0 0}
+      .mwrap{align-items:flex-end;padding:0}
+      .fotos-grid{grid-template-columns:repeat(3,1fr)}
+    }
+  </style>
+</head>
+<body>
+<div id="app"></div>
+<script>
+const AREAS=['Eléctrica','Iluminación','Tableros eléctricos','Civil / estructura','Plomería','CCTV / seguridad','Ascensores','Incendio / emergencia','General'];
+const TIPOS_EDIFICIO=['Edificio residencial','Edificio comercial','Planta industrial','Centro comercial','Otro'];
+const PRIORIDADES=['Urgente','Normal','Programado'];
+const ESTADOS=['Detectado','En proceso','Resuelto'];
+const AREA_ICONS={'Eléctrica':'ti-bolt','Iluminación':'ti-bulb','Tableros eléctricos':'ti-circuit-switchboard','Civil / estructura':'ti-building','Plomería':'ti-droplet','CCTV / seguridad':'ti-camera','Ascensores':'ti-elevator','Incendio / emergencia':'ti-flame','General':'ti-tool'};
+const KI='ea_inspecciones',KE='ea_edificios',KS='ea_insp_session',KT='ea_theme3';
+
+let S={
+  session:null,tab:'dashboard',inspecciones:[],edificios:[],
+  modal:null,sidebarOpen:false,darkMode:false,
+  viendoInsp:null,editandoHallazgo:null
+};
+
+const ls=k=>{try{const v=localStorage.getItem(k);return v?JSON.parse(v):null;}catch(e){return null;}};
+const lss=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v));}catch(e){}};
+function loadData(){
+  S.inspecciones=ls(KI)||[];S.edificios=ls(KE)||[];
+  const sid=ls(KS);if(sid)S.session={id:1,nombre:'Eric Antilef',iniciales:'EA',rol:'admin'};
+  const theme=ls(KT);if(theme){S.darkMode=true;document.body.classList.add('dark');}
+}
+const saveI=()=>lss(KI,S.inspecciones);
+const saveE=()=>lss(KE,S.edificios);
+
+const fmt=n=>'$'+Math.round(n).toLocaleString('es-CL');
+const today=()=>new Date().toISOString().slice(0,10);
+const colorPrioridad=p=>p==='Urgente'?'b-urgente':p==='Normal'?'b-normal':'b-programado';
+const colorEstado=e=>e==='Detectado'?'b-detectado':e==='En proceso'?'b-proceso':'b-resuelto';
+const iconArea=a=>AREA_ICONS[a]||'ti-tool';
+
+function render(){
+  const app=document.getElementById('app');
+  if(!S.session){app.innerHTML=renderLogin();return;}
+  app.innerHTML=`
+    <div class="sidebar-overlay ${S.sidebarOpen?'open':''}" onclick="S.sidebarOpen=false;render()"></div>
+    <div class="sidebar ${S.sidebarOpen?'open':''}">
+      <div class="sidebar-logo">
+        <img src="logo-sm.png" class="logo-img" onerror="this.style.display='none'">
+        <div><div class="logo-text">EA Ingenierías</div><div class="logo-sub">Inspecciones</div></div>
+      </div>
+      <div class="sidebar-section">
+        <div class="sidebar-label">Módulos</div>
+        ${[
+          {id:'dashboard',icon:'ti-layout-dashboard',label:'Resumen'},
+          {id:'inspecciones',icon:'ti-clipboard-check',label:'Inspecciones'},
+          {id:'edificios',icon:'ti-building',label:'Edificios'},
+          {id:'hallazgos',icon:'ti-alert-triangle',label:'Hallazgos'},
+        ].map(n=>`<div class="nav-item ${S.tab===n.id?'active':''}" onclick="setTab('${n.id}');S.sidebarOpen=false;render()">
+          <i class="ti ${n.icon}"></i><span>${n.label}</span>
+        </div>`).join('')}
+        <div style="margin-top:.75rem;padding-top:.75rem;border-top:1px solid rgba(255,255,255,.08)">
+          <div class="sidebar-label">Sistema principal</div>
+          <a class="nav-item" href="index.html"><i class="ti ti-arrow-left"></i><span>Volver al sistema</span></a>
+        </div>
+      </div>
+      <div class="sidebar-bottom">
+        <div class="user-row">
+          <div class="avatar">EA</div>
+          <div><div class="user-name">Eric Antilef</div><div class="user-role">Administrador</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="main">
+      <div class="topbar">
+        <button class="menu-btn" onclick="S.sidebarOpen=true;render()"><i class="ti ti-menu-2"></i></button>
+        <div class="page-title">${{dashboard:'Resumen',inspecciones:'Inspecciones',edificios:'Edificios / Instalaciones',hallazgos:'Todos los hallazgos'}[S.tab]}</div>
+        <div class="topbar-right">
+          ${S.tab==='inspecciones'?`<button class="btn primary sm" onclick="openModal('inspeccion')"><i class="ti ti-plus"></i> Nueva inspección</button>`:''}
+          ${S.tab==='edificios'?`<button class="btn primary sm" onclick="openModal('edificio')"><i class="ti ti-plus"></i> Nuevo edificio</button>`:''}
+        </div>
+      </div>
+      <div class="content" id="mc">${renderTab()}</div>
+    </div>
+    <nav class="bottom-nav">
+      ${[{id:'dashboard',icon:'ti-layout-dashboard',l:'Inicio'},{id:'inspecciones',icon:'ti-clipboard-check',l:'Inspecciones'},{id:'edificios',icon:'ti-building',l:'Edificios'},{id:'hallazgos',icon:'ti-alert-triangle',l:'Hallazgos'}].map(n=>`<button class="bnav-item ${S.tab===n.id?'active':''}" onclick="setTab('${n.id}')"><i class="ti ${n.icon}"></i><span>${n.l}</span></button>`).join('')}
+    </nav>
+    ${S.modal?renderModal():''}
+  `;
+}
+
+function renderLogin(){
+  return`<div style="min-height:100vh;background:var(--navy);display:flex;align-items:center;justify-content:center;padding:1.5rem">
+    <div style="background:var(--bg2);border-radius:var(--radius-lg);padding:2.25rem;width:360px;box-shadow:var(--shadow-lg)">
+      <div style="text-align:center;margin-bottom:1.5rem">
+        <img src="logo-sm.png" style="width:48px;height:48px;margin-bottom:10px" onerror="this.style.display='none'">
+        <div style="font-size:20px;font-weight:800;color:var(--text)">EA Ingenierías</div>
+        <div style="font-size:12px;color:var(--text3);margin-top:3px">Módulo de inspecciones</div>
+      </div>
+      <div class="fg"><label>Usuario</label><input id="lu" placeholder="Ej: eric" onkeydown="if(event.key==='Enter')doLogin()"></div>
+      <div class="fg"><label>Contraseña</label><input id="lp" type="password" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()"></div>
+      <button class="btn primary" style="width:100%;justify-content:center;padding:10px" onclick="doLogin()"><i class="ti ti-login"></i> Ingresar</button>
+      <div id="lerr" style="color:var(--red);font-size:12px;margin-top:7px;text-align:center"></div>
+      <div style="margin-top:1rem;font-size:11px;color:var(--text3);text-align:center">Usa las mismas credenciales del sistema principal</div>
+    </div>
+  </div>`;
+}
+
+function renderTab(){
+  if(S.tab==='dashboard')return renderDash();
+  if(S.tab==='inspecciones')return S.viendoInsp?renderDetalleInsp():renderListaInspecciones();
+  if(S.tab==='edificios')return renderEdificios();
+  if(S.tab==='hallazgos')return renderTodosHallazgos();
+  return'';
+}
+
+function renderDash(){
+  const total=S.inspecciones.length;
+  const hallazgos=S.inspecciones.flatMap(i=>i.hallazgos||[]);
+  const urgentes=hallazgos.filter(h=>h.prioridad==='Urgente'&&h.estado!=='Resuelto').length;
+  const pendientes=hallazgos.filter(h=>h.estado!=='Resuelto').length;
+  const resueltos=hallazgos.filter(h=>h.estado==='Resuelto').length;
+  const recientes=[...S.inspecciones].sort((a,b)=>b.fecha.localeCompare(a.fecha)).slice(0,5);
+  const byArea={};hallazgos.forEach(h=>{byArea[h.area]=(byArea[h.area]||0)+1;});
+  const topAreas=Object.entries(byArea).sort((a,b)=>b[1]-a[1]).slice(0,5);
+  return`
+    <div class="metrics">
+      <div class="metric"><div class="metric-icon blue"><i class="ti ti-clipboard-check"></i></div><div class="mlabel">Inspecciones totales</div><div class="mval">${total}</div><div class="msub">${S.edificios.length} edificio(s)</div></div>
+      <div class="metric"><div class="metric-icon red"><i class="ti ti-alert-triangle"></i></div><div class="mlabel">Hallazgos urgentes</div><div class="mval">${urgentes}</div><div class="msub">Sin resolver</div></div>
+      <div class="metric"><div class="metric-icon amber"><i class="ti ti-clock"></i></div><div class="mlabel">Pendientes</div><div class="mval">${pendientes}</div><div class="msub">Por resolver</div></div>
+      <div class="metric"><div class="metric-icon green"><i class="ti ti-check"></i></div><div class="mlabel">Resueltos</div><div class="mval">${resueltos}</div><div class="msub">Histórico</div></div>
+    </div>
+    ${urgentes>0?`<div style="background:var(--red-lt);border:1px solid rgba(239,68,68,.3);border-radius:var(--radius);padding:10px 14px;margin-bottom:1rem;font-size:12.5px;color:var(--red);display:flex;align-items:center;gap:8px;font-weight:500"><i class="ti ti-alert-triangle"></i> Tienes <b>${urgentes}</b> hallazgo(s) urgente(s) sin resolver.</div>`:''}
+    <div class="grid2">
+      <div class="card">
+        <div class="card-header"><div class="card-title"><i class="ti ti-clock"></i> Últimas inspecciones</div><button class="btn ghost sm" onclick="setTab('inspecciones')">Ver todas</button></div>
+        ${recientes.length?recientes.map(i=>`
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:.7rem 0;border-bottom:1px solid var(--border);cursor:pointer" onclick="verInsp(${i.id})">
+            <div>
+              <div style="font-size:13px;font-weight:600;color:var(--text)">${i.edificio||'Sin edificio'}</div>
+              <div style="font-size:11.5px;color:var(--text3)">${i.fecha} · ${(i.hallazgos||[]).length} hallazgo(s)</div>
+            </div>
+            <span class="badge ${colorPrioridad((i.hallazgos||[]).some(h=>h.prioridad==='Urgente')?'Urgente':'Normal')}">${(i.hallazgos||[]).some(h=>h.prioridad==='Urgente'&&h.estado!=='Resuelto')?'Urgente':'OK'}</span>
+          </div>`).join(''):`<div style="padding:1.5rem;text-align:center;color:var(--text3)">Sin inspecciones</div>`}
+      </div>
+      <div class="card">
+        <div class="card-header"><div class="card-title"><i class="ti ti-chart-bar"></i> Hallazgos por área</div></div>
+        ${topAreas.length?topAreas.map(([area,cnt])=>`
+          <div style="margin-bottom:10px">
+            <div style="display:flex;justify-content:space-between;font-size:12.5px;margin-bottom:4px">
+              <span style="display:flex;align-items:center;gap:6px;color:var(--text2)"><i class="ti ${iconArea(area)}" style="color:var(--blue)"></i>${area}</span>
+              <span style="font-weight:700;color:var(--text)">${cnt}</span>
+            </div>
+            <div style="background:var(--bg3);border-radius:4px;height:5px"><div style="background:var(--blue);border-radius:4px;height:5px;width:${Math.round(cnt/topAreas[0][1]*100)}%;transition:width .5s"></div></div>
+          </div>`).join(''):`<div style="padding:1.5rem;text-align:center;color:var(--text3)">Sin datos</div>`}
+      </div>
+    </div>`;
+}
+
+function renderListaInspecciones(){
+  const list=[...S.inspecciones].sort((a,b)=>b.fecha.localeCompare(a.fecha));
+  return`
+    ${!list.length?`<div style="text-align:center;padding:4rem;color:var(--text3)"><i class="ti ti-clipboard-check" style="font-size:48px;display:block;margin-bottom:16px;opacity:.3"></i><div style="font-size:15px;font-weight:600;margin-bottom:8px">Sin inspecciones registradas</div><div style="font-size:13px;margin-bottom:1.5rem">Comienza creando una nueva inspección</div><button class="btn primary" onclick="openModal('inspeccion')"><i class="ti ti-plus"></i> Nueva inspección</button></div>`
+    :list.map(i=>{
+      const halls=i.hallazgos||[];
+      const urgentes=halls.filter(h=>h.prioridad==='Urgente'&&h.estado!=='Resuelto').length;
+      const resueltos=halls.filter(h=>h.estado==='Resuelto').length;
+      return`<div class="insp-card" onclick="verInsp(${i.id})">
+        <div class="insp-header">
+          <div>
+            <div class="insp-title"><i class="ti ti-building" style="color:var(--blue)"></i> ${i.edificio||'Sin nombre'}</div>
+            <div class="insp-meta">
+              <span><i class="ti ti-calendar" style="font-size:12px"></i> ${i.fecha}</span>
+              <span><i class="ti ti-user" style="font-size:12px"></i> ${i.inspector||'Eric Antilef'}</span>
+              ${i.tipoEdificio?`<span><i class="ti ti-building-skyscraper" style="font-size:12px"></i> ${i.tipoEdificio}</span>`:''}
+              ${i.pisos?`<span><i class="ti ti-stairs" style="font-size:12px"></i> ${i.pisos} pisos</span>`:''}
+            </div>
+          </div>
+          <div style="display:flex;align-items:center;gap:6px" onclick="event.stopPropagation()">
+            ${urgentes>0?`<span class="badge b-urgente"><i class="ti ti-alert-triangle" style="font-size:11px"></i> ${urgentes} urgente${urgentes>1?'s':''}</span>`:''}
+            <button class="btn sm" onclick="generarInforme(${i.id})" title="Generar informe"><i class="ti ti-file-text"></i></button>
+            <button class="btn sm" onclick="openCotizacion(${i.id})" title="Cotizar"><i class="ti ti-receipt"></i></button>
+            <button class="btn ghost sm danger" onclick="delInsp(${i.id})"><i class="ti ti-trash"></i></button>
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;gap:16px;font-size:12.5px;color:var(--text2)">
+          <span><b style="color:var(--text)">${halls.length}</b> hallazgo(s)</span>
+          <span style="color:var(--green)"><b>${resueltos}</b> resuelto(s)</span>
+          ${urgentes>0?`<span style="color:var(--red)"><b>${urgentes}</b> urgente(s)</span>`:''}
+        </div>
+        <div class="insp-items">
+          ${[...new Set(halls.map(h=>h.area))].slice(0,6).map(a=>`<span style="background:var(--blue-lt);color:var(--blue);padding:2px 8px;border-radius:20px;font-size:11px;font-weight:500"><i class="ti ${iconArea(a)}" style="font-size:11px"></i> ${a}</span>`).join('')}
+        </div>
+      </div>`;
+    }).join('')}`;
+}
+
+function renderDetalleInsp(){
+  const i=S.inspecciones.find(x=>x.id===S.viendoInsp);
+  if(!i)return'';
+  const halls=i.hallazgos||[];
+  return`
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:1.25rem">
+      <button class="btn ghost sm" onclick="S.viendoInsp=null;render()"><i class="ti ti-arrow-left"></i> Volver</button>
+      <div>
+        <div style="font-size:16px;font-weight:700;color:var(--text)">${i.edificio}</div>
+        <div style="font-size:12px;color:var(--text3)">${i.fecha} · ${i.inspector||'Eric Antilef'} ${i.tecnico?'· '+i.tecnico:''}</div>
+      </div>
+      <div style="margin-left:auto;display:flex;gap:8px">
+        <button class="btn sm" onclick="openModal('hallazgo',null,${i.id})"><i class="ti ti-plus"></i> Hallazgo</button>
+        <button class="btn warning sm" onclick="generarInforme(${i.id})"><i class="ti ti-file-text"></i> Informe</button>
+        <button class="btn success sm" onclick="openCotizacion(${i.id})"><i class="ti ti-receipt"></i> Cotizar</button>
+      </div>
+    </div>
+    ${i.descripcion?`<div class="card" style="padding:.9rem 1.1rem;margin-bottom:1rem"><div style="font-size:13px;color:var(--text2)">${i.descripcion}</div></div>`:''}
+    <div class="metrics" style="grid-template-columns:repeat(3,minmax(0,1fr))">
+      <div class="metric"><div class="metric-icon blue"><i class="ti ti-list"></i></div><div class="mlabel">Total hallazgos</div><div class="mval">${halls.length}</div></div>
+      <div class="metric"><div class="metric-icon red"><i class="ti ti-alert-triangle"></i></div><div class="mlabel">Urgentes</div><div class="mval">${halls.filter(h=>h.prioridad==='Urgente').length}</div></div>
+      <div class="metric"><div class="metric-icon green"><i class="ti ti-check"></i></div><div class="mlabel">Resueltos</div><div class="mval">${halls.filter(h=>h.estado==='Resuelto').length}</div></div>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title"><i class="ti ti-alert-triangle"></i> Hallazgos registrados</div>
+        <button class="btn primary sm" onclick="openModal('hallazgo',null,${i.id})"><i class="ti ti-plus"></i> Agregar</button>
+      </div>
+      ${halls.length?halls.map(h=>`
+        <div class="hall-card">
+          <div class="hall-foto" onclick="${h.foto?`verFoto('${h.foto}')`:''}">${h.foto?`<img src="${h.foto}" alt="foto">`:`<i class="ti ti-camera"></i>`}</div>
+          <div class="hall-info">
+            <div class="hall-titulo">${h.titulo}</div>
+            <div class="hall-desc">${h.descripcion||''}</div>
+            <div style="font-size:11.5px;color:var(--text3);margin-top:4px"><i class="ti ti-map-pin" style="font-size:12px"></i> ${h.ubicacion||'Sin ubicar'}</div>
+            <div class="hall-tags">
+              <span class="badge ${colorPrioridad(h.prioridad)}">${h.prioridad}</span>
+              <span class="badge ${colorEstado(h.estado)}">${h.estado}</span>
+              <span style="background:var(--blue-lt);color:var(--blue);padding:2px 8px;border-radius:20px;font-size:11px"><i class="ti ${iconArea(h.area)}" style="font-size:11px"></i> ${h.area}</span>
+            </div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:4px;align-items:flex-end">
+            <button class="btn ghost sm" onclick="openModal('hallazgo',${h.id},${i.id})"><i class="ti ti-edit"></i></button>
+            <button class="btn ghost sm danger" onclick="delHallazgo(${i.id},${h.id})"><i class="ti ti-trash"></i></button>
+            <button class="btn ghost sm" onclick="cambiarEstado(${i.id},${h.id})" title="Cambiar estado"><i class="ti ti-refresh"></i></button>
+          </div>
+        </div>`).join('')
+      :`<div style="text-align:center;padding:2rem;color:var(--text3)">Sin hallazgos. Agrega el primero.</div>`}
+    </div>`;
+}
+
+function renderEdificios(){
+  return`
+    ${!S.edificios.length?`<div style="text-align:center;padding:4rem;color:var(--text3)"><i class="ti ti-building" style="font-size:48px;display:block;margin-bottom:16px;opacity:.3"></i><div style="font-size:15px;font-weight:600;margin-bottom:8px">Sin edificios registrados</div><button class="btn primary" onclick="openModal('edificio')"><i class="ti ti-plus"></i> Nuevo edificio</button></div>`
+    :S.edificios.map(e=>{
+      const inspCount=S.inspecciones.filter(i=>i.edificio===e.nombre).length;
+      const halls=S.inspecciones.filter(i=>i.edificio===e.nombre).flatMap(i=>i.hallazgos||[]);
+      const urgentes=halls.filter(h=>h.prioridad==='Urgente'&&h.estado!=='Resuelto').length;
+      return`<div class="card">
+        <div style="display:flex;align-items:flex-start;justify-content:space-between">
+          <div style="display:flex;gap:12px;align-items:flex-start">
+            <div style="width:44px;height:44px;border-radius:12px;background:var(--blue-lt);color:var(--blue);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0"><i class="ti ti-building-skyscraper"></i></div>
+            <div>
+              <div style="font-size:15px;font-weight:700;color:var(--text)">${e.nombre}</div>
+              <div style="font-size:12px;color:var(--text3);margin-top:2px">${e.tipo||''} ${e.pisos?'· '+e.pisos+' pisos':''} ${e.direccion?'· '+e.direccion:''}</div>
+              <div style="font-size:12px;color:var(--text2);margin-top:4px">${e.administrador?`<i class="ti ti-user" style="font-size:12px"></i> Adm: ${e.administrador}`:''} ${e.contacto?`· ${e.contacto}`:''}</div>
+            </div>
+          </div>
+          <div style="display:flex;gap:6px">
+            <button class="btn ghost sm" onclick="openModal('edificio',${e.id})"><i class="ti ti-edit"></i></button>
+            <button class="btn ghost sm danger" onclick="delEdificio(${e.id})"><i class="ti ti-trash"></i></button>
+          </div>
+        </div>
+        <div style="display:flex;gap:16px;margin-top:1rem;padding-top:.85rem;border-top:1px solid var(--border);font-size:12.5px">
+          <span style="color:var(--text2)"><b style="color:var(--text)">${inspCount}</b> inspección(es)</span>
+          <span style="color:var(--text2)"><b style="color:var(--text)">${halls.length}</b> hallazgo(s)</span>
+          ${urgentes>0?`<span style="color:var(--red);font-weight:600"><i class="ti ti-alert-triangle" style="font-size:12px"></i> ${urgentes} urgente(s)</span>`:'<span style="color:var(--green)"><i class="ti ti-check" style="font-size:12px"></i> Sin urgencias</span>'}
+        </div>
+      </div>`;
+    }).join('')}`;
+}
+
+function renderTodosHallazgos(){
+  const todos=S.inspecciones.flatMap(i=>(i.hallazgos||[]).map(h=>({...h,_edificio:i.edificio,_fecha:i.fecha,_inspId:i.id})));
+  const pendientes=todos.filter(h=>h.estado!=='Resuelto').sort((a,b)=>['Urgente','Normal','Programado'].indexOf(a.prioridad)-['Urgente','Normal','Programado'].indexOf(b.prioridad));
+  const resueltos=todos.filter(h=>h.estado==='Resuelto');
+  if(!todos.length)return`<div style="text-align:center;padding:4rem;color:var(--text3)">Sin hallazgos registrados.</div>`;
+  const renderH=(h)=>`<div class="hall-card" style="cursor:pointer" onclick="verInsp(${h._inspId})">
+    <div class="hall-foto">${h.foto?`<img src="${h.foto}" alt="foto">`:`<i class="ti ti-camera"></i>`}</div>
+    <div class="hall-info">
+      <div class="hall-titulo">${h.titulo}</div>
+      <div class="hall-desc">${h._edificio} · ${h._fecha}</div>
+      <div style="font-size:11px;color:var(--text3);margin-top:2px">${h.ubicacion||''}</div>
+      <div class="hall-tags">
+        <span class="badge ${colorPrioridad(h.prioridad)}">${h.prioridad}</span>
+        <span class="badge ${colorEstado(h.estado)}">${h.estado}</span>
+        <span style="background:var(--blue-lt);color:var(--blue);padding:2px 7px;border-radius:20px;font-size:11px">${h.area}</span>
+      </div>
+    </div>
+  </div>`;
+  return`
+    ${pendientes.length?`<div class="card"><div class="card-header"><div class="card-title"><i class="ti ti-clock"></i> Pendientes (${pendientes.length})</div></div>${pendientes.map(renderH).join('')}</div>`:''}
+    ${resueltos.length?`<div class="card"><div class="card-header"><div class="card-title"><i class="ti ti-check"></i> Resueltos (${resueltos.length})</div></div>${resueltos.map(renderH).join('')}</div>`:''}`;
+}
+
+function renderModal(){
+  const m=S.modal;
+  if(m.tipo==='inspeccion')return renderModalInsp(m.id);
+  if(m.tipo==='hallazgo')return renderModalHallazgo(m.id,m.inspId);
+  if(m.tipo==='edificio')return renderModalEdificio(m.id);
+  if(m.tipo==='cotizacion')return renderModalCotizacion(m.id);
+  if(m.tipo==='informe')return renderModalInforme(m.id);
+  if(m.tipo==='foto')return renderModalFoto(m.src);
+  return'';
+}
+
+function renderModalInsp(id){
+  const i=id?S.inspecciones.find(x=>x.id===id):null;
+  const v=(k,d='')=>i?(i[k]!==undefined?i[k]:d):d;
+  return`<div class="mwrap open" onclick="if(event.target===this)closeModal()">
+    <div class="modal">
+      <div class="mtitle"><span>${i?'Editar inspección':'Nueva inspección'}</span><button class="btn ghost sm" onclick="closeModal()"><i class="ti ti-x"></i></button></div>
+      <div class="fgr">
+        <div class="fg"><label>Edificio / Instalación</label>
+          <input id="i-edif" list="edif-list" value="${v('edificio')}" placeholder="Nombre del edificio">
+          <datalist id="edif-list">${S.edificios.map(e=>`<option value="${e.nombre}">`).join('')}</datalist>
+        </div>
+        <div class="fg"><label>Fecha</label><input type="date" id="i-fecha" value="${v('fecha',today())}"></div>
+      </div>
+      <div class="fgr">
+        <div class="fg"><label>Tipo de instalación</label><select id="i-tipo"><option value="">Seleccionar</option>${TIPOS_EDIFICIO.map(t=>`<option value="${t}" ${v('tipoEdificio')===t?'selected':''}>${t}</option>`).join('')}</select></div>
+        <div class="fg"><label>N° de pisos</label><input type="number" id="i-pisos" value="${v('pisos')}" placeholder="Ej: 18"></div>
+      </div>
+      <div class="fgr">
+        <div class="fg"><label>Inspector</label><input id="i-insp" value="${v('inspector','Eric Antilef')}" placeholder="Nombre del inspector"></div>
+        <div class="fg"><label>Técnico acompañante</label><input id="i-tecnico" value="${v('tecnico')}" placeholder="Nombre del técnico"></div>
+      </div>
+      <div class="fg"><label>Observaciones generales</label><textarea id="i-desc">${v('descripcion')}</textarea></div>
+      <div class="fa"><button class="btn" onclick="closeModal()">Cancelar</button><button class="btn primary" onclick="guardarInsp(${id||''})"><i class="ti ti-check"></i> Guardar</button></div>
+    </div>
+  </div>`;
+}
+
+function renderModalHallazgo(hid,inspId){
+  const insp=S.inspecciones.find(x=>x.id===inspId);
+  const h=hid&&insp?(insp.hallazgos||[]).find(x=>x.id===hid):null;
+  const v=(k,d='')=>h?(h[k]!==undefined?h[k]:d):d;
+  return`<div class="mwrap open" onclick="if(event.target===this)closeModal()">
+    <div class="modal">
+      <div class="mtitle"><span>${h?'Editar hallazgo':'Nuevo hallazgo'}</span><button class="btn ghost sm" onclick="closeModal()"><i class="ti ti-x"></i></button></div>
+      <div class="fg"><label>Título / descripción corta</label><input id="h-titulo" value="${v('titulo')}" placeholder="Ej: Tablero eléctrico con breaker quemado"></div>
+      <div class="fgr">
+        <div class="fg"><label>Área</label><select id="h-area"><option value="">Seleccionar</option>${AREAS.map(a=>`<option value="${a}" ${v('area')===a?'selected':''}>${a}</option>`).join('')}</select></div>
+        <div class="fg"><label>Ubicación en el edificio</label><input id="h-ubic" value="${v('ubicacion')}" placeholder="Ej: Piso 12, sala eléctrica"></div>
+      </div>
+      <div class="fgr">
+        <div class="fg"><label>Prioridad</label><select id="h-prior">${PRIORIDADES.map(p=>`<option value="${p}" ${v('prioridad','Normal')===p?'selected':''}>${p}</option>`).join('')}</select></div>
+        <div class="fg"><label>Estado</label><select id="h-estado">${ESTADOS.map(e=>`<option value="${e}" ${v('estado','Detectado')===e?'selected':''}>${e}</option>`).join('')}</select></div>
+      </div>
+      <div class="fg"><label>Descripción detallada</label><textarea id="h-desc">${v('descripcion')}</textarea></div>
+      <div class="fg"><label>Foto</label>
+        <div id="foto-prev" style="margin-bottom:8px">${v('foto')?`<div class="foto-thumb" style="width:80px;height:80px"><img src="${v('foto')}"><button class="foto-del" onclick="document.getElementById('h-foto-data').value='';document.getElementById('foto-prev').innerHTML=''">×</button></div>`:''}</div>
+        <div class="foto-upload" onclick="document.getElementById('h-foto-input').click()"><i class="ti ti-camera" style="font-size:24px;display:block;margin-bottom:6px"></i>Toca para agregar foto</div>
+        <input type="file" id="h-foto-input" accept="image/*" capture="environment" style="display:none" onchange="previewFoto(this)">
+        <input type="hidden" id="h-foto-data" value="${v('foto')}">
+      </div>
+      <div class="fa"><button class="btn" onclick="closeModal()">Cancelar</button><button class="btn primary" onclick="guardarHallazgo(${hid||'null'},${inspId})"><i class="ti ti-check"></i> Guardar</button></div>
+    </div>
+  </div>`;
+}
+
+function renderModalEdificio(id){
+  const e=id?S.edificios.find(x=>x.id===id):null;
+  const v=(k,d='')=>e?(e[k]||d):d;
+  return`<div class="mwrap open" onclick="if(event.target===this)closeModal()">
+    <div class="modal">
+      <div class="mtitle"><span>${e?'Editar edificio':'Nuevo edificio'}</span><button class="btn ghost sm" onclick="closeModal()"><i class="ti ti-x"></i></button></div>
+      <div class="fgr">
+        <div class="fg"><label>Nombre del edificio</label><input id="e-nombre" value="${v('nombre')}" placeholder="Ej: Torre Arauco Norte"></div>
+        <div class="fg"><label>Tipo</label><select id="e-tipo"><option value="">Seleccionar</option>${TIPOS_EDIFICIO.map(t=>`<option value="${t}" ${v('tipo')===t?'selected':''}>${t}</option>`).join('')}</select></div>
+      </div>
+      <div class="fgr">
+        <div class="fg"><label>N° de pisos</label><input type="number" id="e-pisos" value="${v('pisos')}" placeholder="18"></div>
+        <div class="fg"><label>Dirección</label><input id="e-dir" value="${v('direccion')}" placeholder="Dirección"></div>
+      </div>
+      <div class="fgr">
+        <div class="fg"><label>Nombre del administrador</label><input id="e-adm" value="${v('administrador')}" placeholder="Nombre"></div>
+        <div class="fg"><label>Email / teléfono</label><input id="e-cont" value="${v('contacto')}" placeholder="contacto@edificio.cl"></div>
+      </div>
+      <div class="fg"><label>Notas</label><textarea id="e-notas">${v('notas')}</textarea></div>
+      <div class="fa"><button class="btn" onclick="closeModal()">Cancelar</button><button class="btn primary" onclick="guardarEdificio(${id||''})"><i class="ti ti-check"></i> Guardar</button></div>
+    </div>
+  </div>`;
+}
+
+function renderModalCotizacion(inspId){
+  const insp=S.inspecciones.find(x=>x.id===inspId);
+  if(!insp)return'';
+  const halls=(insp.hallazgos||[]).filter(h=>h.estado!=='Resuelto');
+  const items=insp._cotizItems||halls.map((h,i)=>({id:i,titulo:h.titulo,desc:'',precio:0,und:'GL'}));
+  if(!insp._cotizItems)insp._cotizItems=items;
+  const total=items.reduce((s,it)=>s+(parseFloat(it.precio)||0),0);
+  return`<div class="mwrap open" onclick="if(event.target===this)closeModal()">
+    <div class="modal wide">
+      <div class="mtitle"><span><i class="ti ti-receipt" style="color:var(--blue)"></i> Cotización — ${insp.edificio}</span><button class="btn ghost sm" onclick="closeModal()"><i class="ti ti-x"></i></button></div>
+      <div style="font-size:12px;color:var(--text3);margin-bottom:1rem">Completa los precios para cada trabajo detectado</div>
+      <div id="cotiz-items">
+        ${items.map((it,idx)=>`
+          <div class="cotiz-item">
+            <div class="cotiz-num">${idx+1}</div>
+            <div style="flex:1;display:grid;grid-template-columns:1fr auto auto;gap:8px;align-items:start">
+              <div>
+                <div style="font-size:12.5px;font-weight:600;color:var(--text);margin-bottom:4px">${it.titulo}</div>
+                <input placeholder="Descripción del trabajo..." value="${it.desc||''}" style="width:100%;padding:6px 9px;border:1px solid var(--border2);border-radius:8px;background:var(--bg3);color:var(--text);font-size:12px;font-family:inherit" oninput="updateCotizItem(${inspId},${idx},'desc',this.value)">
+              </div>
+              <div style="min-width:80px">
+                <div style="font-size:11px;color:var(--text3);margin-bottom:4px">Und.</div>
+                <select style="padding:6px;border:1px solid var(--border2);border-radius:8px;background:var(--bg3);color:var(--text);font-size:12px;font-family:inherit" onchange="updateCotizItem(${inspId},${idx},'und',this.value)">
+                  ${['GL','UN','HH','M','M2','M3'].map(u=>`<option ${it.und===u?'selected':''}>${u}</option>`).join('')}
+                </select>
+              </div>
+              <div style="min-width:110px">
+                <div style="font-size:11px;color:var(--text3);margin-bottom:4px">Precio ($)</div>
+                <input type="number" placeholder="0" value="${it.precio||''}" style="width:100%;padding:6px 9px;border:1px solid var(--border2);border-radius:8px;background:var(--bg3);color:var(--text);font-size:12px;font-family:inherit" oninput="updateCotizItem(${inspId},${idx},'precio',this.value);updateCotizTotal(${inspId})">
+              </div>
+            </div>
+          </div>`).join('')}
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:1rem;background:var(--navy);border-radius:var(--radius);margin-top:1rem;color:#fff">
+        <div><div style="font-size:11px;opacity:.6;margin-bottom:2px">TOTAL NETO</div><div style="font-size:22px;font-weight:800" id="cotiz-total">${fmt(total)}</div></div>
+        <div style="text-align:right;font-size:11px;opacity:.6">IVA 19%: <b>${fmt(total*.19)}</b><br>Total + IVA: <b>${fmt(total*1.19)}</b></div>
+      </div>
+      <div class="fg" style="margin-top:1rem"><label>Condiciones y notas de pie de página</label><textarea id="cotiz-notas" rows="3">${insp._cotizNotas||'• Propuesta válida por 30 días desde la fecha de emisión.\n• Materiales e insumos incluidos según detalle.\n• Mano de obra especializada certificada.\n• Plazo de ejecución a coordinar con el cliente.'}</textarea></div>
+      <div class="fa">
+        <button class="btn" onclick="closeModal()">Cancelar</button>
+        <button class="btn primary" onclick="descargarCotizacion(${inspId})"><i class="ti ti-download"></i> Descargar cotización</button>
+      </div>
+    </div>
+  </div>`;
+}
+
+function renderModalInforme(inspId){
+  const insp=S.inspecciones.find(x=>x.id===inspId);
+  if(!insp)return'';
+  return`<div class="mwrap open" onclick="if(event.target===this)closeModal()">
+    <div class="modal">
+      <div class="mtitle"><span><i class="ti ti-file-text" style="color:var(--blue)"></i> Generar informe</span><button class="btn ghost sm" onclick="closeModal()"><i class="ti ti-x"></i></button></div>
+      <div style="font-size:13px;color:var(--text2);margin-bottom:1rem">Informe de inspección: <b>${insp.edificio}</b> — ${insp.fecha}</div>
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <button class="btn primary" style="justify-content:center;padding:12px" onclick="descargarInforme(${inspId},'html')">
+          <i class="ti ti-file-code"></i> Descargar informe HTML (imprimible como PDF)
+        </button>
+        <button class="btn" style="justify-content:center;padding:12px" onclick="descargarInforme(${inspId},'csv')">
+          <i class="ti ti-table"></i> Descargar listado CSV
+        </button>
+      </div>
+      <div style="margin-top:1rem;padding:10px 14px;background:var(--bg3);border-radius:var(--radius);font-size:12px;color:var(--text3)">
+        <i class="ti ti-info-circle" style="color:var(--blue)"></i> El informe HTML puede abrirse en cualquier navegador y guardar como PDF con Ctrl+P → "Guardar como PDF".
+      </div>
+      <div class="fa"><button class="btn" onclick="closeModal()">Cerrar</button></div>
+    </div>
+  </div>`;
+}
+
+function renderModalFoto(src){
+  return`<div class="mwrap open" onclick="closeModal()" style="padding:1rem">
+    <div style="max-width:90vw;max-height:90vh;position:relative">
+      <img src="${src}" style="max-width:100%;max-height:85vh;border-radius:var(--radius-lg);box-shadow:var(--shadow-lg)">
+      <button class="btn ghost sm" onclick="closeModal()" style="position:absolute;top:-12px;right:-12px;background:var(--bg2);border-radius:50%;width:32px;height:32px;padding:0;justify-content:center"><i class="ti ti-x"></i></button>
+    </div>
+  </div>`;
+}
+
+// ACTIONS
+function doLogin(){
+  const u=document.getElementById('lu').value.trim();
+  const p=document.getElementById('lp').value;
+  const valid=[{u:'eric',p:'ea2024'},{u:'jefe2',p:'op2024'},{u:'asist',p:'as2024'}];
+  if(valid.find(x=>x.u===u&&x.p===p)){S.session={id:1,nombre:'Eric Antilef',iniciales:'EA',rol:'admin'};lss(KS,1);render();}
+  else document.getElementById('lerr').textContent='Usuario o contraseña incorrectos.';
+}
+function setTab(t){S.tab=t;S.viendoInsp=null;render();}
+function openModal(tipo,id,inspId){S.modal={tipo,id,inspId};render();}
+function closeModal(){S.modal=null;render();}
+function verInsp(id){S.tab='inspecciones';S.viendoInsp=id;render();}
+function verFoto(src){S.modal={tipo:'foto',src};render();}
+
+function guardarInsp(id){
+  const edificio=document.getElementById('i-edif').value.trim();
+  if(!edificio){alert('Escribe el nombre del edificio.');return;}
+  const data={edificio,fecha:document.getElementById('i-fecha').value,tipoEdificio:document.getElementById('i-tipo').value,pisos:document.getElementById('i-pisos').value,inspector:document.getElementById('i-insp').value,tecnico:document.getElementById('i-tecnico').value,descripcion:document.getElementById('i-desc').value};
+  if(id){const i=S.inspecciones.findIndex(x=>x.id===id);if(i>=0)S.inspecciones[i]={...S.inspecciones[i],...data};}
+  else S.inspecciones.push({...data,id:Date.now(),hallazgos:[]});
+  saveI();closeModal();
+}
+
+function guardarHallazgo(hid,inspId){
+  const titulo=document.getElementById('h-titulo').value.trim();
+  if(!titulo){alert('Escribe el título del hallazgo.');return;}
+  const insp=S.inspecciones.find(x=>x.id===inspId);
+  if(!insp)return;
+  if(!insp.hallazgos)insp.hallazgos=[];
+  const foto=document.getElementById('h-foto-data').value;
+  const data={titulo,area:document.getElementById('h-area').value,ubicacion:document.getElementById('h-ubic').value,prioridad:document.getElementById('h-prior').value,estado:document.getElementById('h-estado').value,descripcion:document.getElementById('h-desc').value,foto};
+  if(hid&&hid!=='null'){const i=insp.hallazgos.findIndex(x=>x.id===hid);if(i>=0)insp.hallazgos[i]={...insp.hallazgos[i],...data};}
+  else insp.hallazgos.push({...data,id:Date.now()});
+  saveI();closeModal();
+}
+
+function guardarEdificio(id){
+  const nombre=document.getElementById('e-nombre').value.trim();
+  if(!nombre){alert('Escribe el nombre del edificio.');return;}
+  const data={nombre,tipo:document.getElementById('e-tipo').value,pisos:document.getElementById('e-pisos').value,direccion:document.getElementById('e-dir').value,administrador:document.getElementById('e-adm').value,contacto:document.getElementById('e-cont').value,notas:document.getElementById('e-notas').value};
+  if(id){const i=S.edificios.findIndex(x=>x.id===id);if(i>=0)S.edificios[i]={...S.edificios[i],...data};}
+  else S.edificios.push({...data,id:Date.now()});
+  saveE();closeModal();
+}
+
+function delInsp(id){if(!confirm('¿Eliminar esta inspección?'))return;S.inspecciones=S.inspecciones.filter(i=>i.id!==id);S.viendoInsp=null;saveI();render();}
+function delHallazgo(inspId,hid){if(!confirm('¿Eliminar este hallazgo?'))return;const insp=S.inspecciones.find(x=>x.id===inspId);if(insp)insp.hallazgos=(insp.hallazgos||[]).filter(h=>h.id!==hid);saveI();render();}
+function delEdificio(id){if(!confirm('¿Eliminar este edificio?'))return;S.edificios=S.edificios.filter(e=>e.id!==id);saveE();render();}
+
+function cambiarEstado(inspId,hid){
+  const insp=S.inspecciones.find(x=>x.id===inspId);
+  const h=insp&&(insp.hallazgos||[]).find(x=>x.id===hid);
+  if(!h)return;
+  const idx=ESTADOS.indexOf(h.estado);
+  h.estado=ESTADOS[(idx+1)%ESTADOS.length];
+  saveI();render();
+}
+
+function previewFoto(input){
+  const file=input.files[0];
+  if(!file)return;
+  const reader=new FileReader();
+  reader.onload=e=>{
+    document.getElementById('h-foto-data').value=e.target.result;
+    document.getElementById('foto-prev').innerHTML=`<div class="foto-thumb" style="width:80px;height:80px"><img src="${e.target.result}"><button class="foto-del" onclick="document.getElementById('h-foto-data').value='';document.getElementById('foto-prev').innerHTML=''">×</button></div>`;
+  };
+  reader.readAsDataURL(file);
+}
+
+function openCotizacion(inspId){
+  const insp=S.inspecciones.find(x=>x.id===inspId);
+  if(!insp)return;
+  if(!insp._cotizItems){
+    const halls=(insp.hallazgos||[]).filter(h=>h.estado!=='Resuelto');
+    insp._cotizItems=halls.map((h,i)=>({id:i,titulo:h.titulo,desc:'',precio:0,und:'GL'}));
+  }
+  S.modal={tipo:'cotizacion',id:inspId};render();
+}
+
+function updateCotizItem(inspId,idx,field,val){
+  const insp=S.inspecciones.find(x=>x.id===inspId);
+  if(insp&&insp._cotizItems&&insp._cotizItems[idx])insp._cotizItems[idx][field]=val;
+}
+
+function updateCotizTotal(inspId){
+  const insp=S.inspecciones.find(x=>x.id===inspId);
+  if(!insp)return;
+  const total=(insp._cotizItems||[]).reduce((s,it)=>s+(parseFloat(it.precio)||0),0);
+  const el=document.getElementById('cotiz-total');
+  if(el)el.textContent=fmt(total);
+}
+
+function generarInforme(inspId){
+  S.modal={tipo:'informe',id:inspId};render();
+}
+
+function descargarInforme(inspId,formato){
+  const insp=S.inspecciones.find(x=>x.id===inspId);
+  if(!insp)return;
+  if(formato==='csv'){
+    const halls=insp.hallazgos||[];
+    const h=['Título','Área','Ubicación','Prioridad','Estado','Descripción'];
+    const rows=halls.map(h=>[h.titulo,h.area,h.ubicacion||'',h.prioridad,h.estado,h.descripcion||''].map(v=>`"${String(v).replace(/"/g,'""')}"`).join(','));
+    const csv=[h.join(','),...rows].join('\n');
+    const a=document.createElement('a');a.href=URL.createObjectURL(new Blob(['\uFEFF'+csv],{type:'text/csv;charset=utf-8'}));a.download=`informe_${insp.edificio.replace(/\s/g,'_')}_${insp.fecha}.csv`;a.click();
+    return;
+  }
+  // HTML report
+  const halls=insp.hallazgos||[];
+  const urgentes=halls.filter(h=>h.prioridad==='Urgente');
+  const normales=halls.filter(h=>h.prioridad==='Normal');
+  const programados=halls.filter(h=>h.prioridad==='Programado');
+  const colorBadge=p=>p==='Urgente'?'#FEF2F2;color:#DC2626':'p==='Normal'?'#FFFBEB;color:#92400E':'#EFF6FF;color:#2563EB';
+  const html=`<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Informe Inspección — ${insp.edificio}</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Segoe UI',system-ui,sans-serif;background:#f8fafc;color:#0f172a;font-size:13px;line-height:1.5}
+  .header{background:#1B2559;color:#fff;padding:2rem 2.5rem;display:flex;justify-content:space-between;align-items:flex-start}
+  .logo-area{display:flex;flex-direction:column;gap:4px}
+  .empresa{font-size:20px;font-weight:800;letter-spacing:-.3px}
+  .subtitulo{font-size:12px;opacity:.6}
+  .doc-info{text-align:right;font-size:12px;opacity:.7}
+  .content{padding:2rem 2.5rem;max-width:900px;margin:0 auto}
+  .section{background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:1.5rem;margin-bottom:1.5rem}
+  .section-title{font-size:15px;font-weight:700;color:#0f172a;margin-bottom:1rem;padding-bottom:.75rem;border-bottom:1px solid #e2e8f0;display:flex;align-items:center;gap:8px}
+  .info-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem}
+  .info-item{background:#f8fafc;border-radius:8px;padding:.85rem}
+  .info-label{font-size:11px;font-weight:600;color:#94a3b8;text-transform:uppercase;letter-spacing:.05em;margin-bottom:3px}
+  .info-val{font-size:14px;font-weight:600;color:#0f172a}
+  .hall-item{border:1px solid #e2e8f0;border-radius:10px;padding:1rem;margin-bottom:.75rem;display:flex;gap:1rem}
+  .hall-foto{width:80px;height:80px;border-radius:8px;object-fit:cover;flex-shrink:0;background:#f1f5f9}
+  .hall-body{flex:1}
+  .hall-titulo{font-size:14px;font-weight:700;color:#0f172a;margin-bottom:4px}
+  .hall-desc{font-size:12.5px;color:#475569;margin-bottom:6px}
+  .badge{display:inline-block;padding:2px 9px;border-radius:20px;font-size:11px;font-weight:600;margin-right:4px}
+  .badge-urgente{background:#FEF2F2;color:#DC2626}
+  .badge-normal{background:#FFFBEB;color:#92400E}
+  .badge-programado{background:#EFF6FF;color:#2563EB}
+  .badge-detectado{background:#FFF7ED;color:#EA580C}
+  .badge-proceso{background:#FFFBEB;color:#92400E}
+  .badge-resuelto{background:#ECFDF5;color:#059669}
+  .badge-area{background:#EFF6FF;color:#2563EB}
+  .resumen-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:1.5rem}
+  .resumen-card{background:#fff;border:1px solid #e2e8f0;border-radius:10px;padding:1rem;text-align:center}
+  .resumen-num{font-size:28px;font-weight:800;color:#0f172a}
+  .resumen-label{font-size:11px;color:#94a3b8;margin-top:2px}
+  .firma-box{border:1.5px solid #e2e8f0;border-radius:10px;padding:1.5rem;text-align:center;min-height:80px;display:flex;flex-direction:column;justify-content:flex-end}
+  .firma-line{border-top:1px solid #cbd5e1;padding-top:.5rem;font-size:12px;color:#64748b}
+  .footer{background:#f1f5f9;border-top:1px solid #e2e8f0;padding:1.25rem 2.5rem;text-align:center;font-size:11.5px;color:#94a3b8;margin-top:2rem}
+  @media print{body{background:#fff}.section{break-inside:avoid}}
+</style>
+</head>
+<body>
+<div class="header">
+  <div class="logo-area">
+    <div class="empresa">EA INGENIERÍAS</div>
+    <div class="subtitulo">EIRL · Ingeniería Eléctrica y Civil</div>
+    <div style="margin-top:8px;font-size:13px;font-weight:600">INFORME DE INSPECCIÓN TÉCNICA</div>
+  </div>
+  <div class="doc-info">
+    <div style="font-size:16px;font-weight:700">N° ${String(insp.id).slice(-6)}</div>
+    <div style="margin-top:4px">Fecha: ${insp.fecha}</div>
+    <div>Generado: ${new Date().toLocaleDateString('es-CL')}</div>
+  </div>
+</div>
+<div class="content">
+  <div class="section">
+    <div class="section-title">📋 Datos de la inspección</div>
+    <div class="info-grid">
+      <div class="info-item"><div class="info-label">Edificio / Instalación</div><div class="info-val">${insp.edificio}</div></div>
+      <div class="info-item"><div class="info-label">Tipo</div><div class="info-val">${insp.tipoEdificio||'—'}</div></div>
+      <div class="info-item"><div class="info-label">N° de pisos</div><div class="info-val">${insp.pisos||'—'}</div></div>
+      <div class="info-item"><div class="info-label">Fecha inspección</div><div class="info-val">${insp.fecha}</div></div>
+      <div class="info-item"><div class="info-label">Inspector</div><div class="info-val">${insp.inspector||'Eric Antilef'}</div></div>
+      <div class="info-item"><div class="info-label">Técnico</div><div class="info-val">${insp.tecnico||'—'}</div></div>
+    </div>
+    ${insp.descripcion?`<div style="margin-top:1rem;padding:.85rem;background:#f8fafc;border-radius:8px;font-size:12.5px;color:#475569"><b>Observaciones generales:</b> ${insp.descripcion}</div>`:''}
+  </div>
+  <div class="resumen-grid">
+    <div class="resumen-card"><div class="resumen-num">${halls.length}</div><div class="resumen-label">Total hallazgos</div></div>
+    <div class="resumen-card" style="border-color:#FCA5A5"><div class="resumen-num" style="color:#DC2626">${urgentes.length}</div><div class="resumen-label">Urgentes</div></div>
+    <div class="resumen-card" style="border-color:#FCD34D"><div class="resumen-num" style="color:#92400E">${normales.length}</div><div class="resumen-label">Normales</div></div>
+    <div class="resumen-card" style="border-color:#6EE7B7"><div class="resumen-num" style="color:#059669">${halls.filter(h=>h.estado==='Resuelto').length}</div><div class="resumen-label">Resueltos</div></div>
+  </div>
+  ${urgentes.length?`<div class="section">
+    <div class="section-title" style="color:#DC2626">🚨 Hallazgos URGENTES (${urgentes.length})</div>
+    ${urgentes.map(h=>`<div class="hall-item" style="border-color:#FCA5A5">
+      ${h.foto?`<img class="hall-foto" src="${h.foto}" alt="foto">`:'<div class="hall-foto" style="display:flex;align-items:center;justify-content:center;font-size:24px">📷</div>'}
+      <div class="hall-body">
+        <div class="hall-titulo">${h.titulo}</div>
+        <div style="font-size:11.5px;color:#64748b;margin-bottom:5px">📍 ${h.ubicacion||'Sin ubicar'}</div>
+        <div class="hall-desc">${h.descripcion||''}</div>
+        <div><span class="badge badge-urgente">Urgente</span><span class="badge badge-${h.estado.toLowerCase().replace(' ','-')}">${h.estado}</span><span class="badge badge-area">${h.area}</span></div>
+      </div>
+    </div>`).join('')}
+  </div>`:''}
+  ${normales.length||programados.length?`<div class="section">
+    <div class="section-title">📋 Otros hallazgos (${normales.length+programados.length})</div>
+    ${[...normales,...programados].map(h=>`<div class="hall-item">
+      ${h.foto?`<img class="hall-foto" src="${h.foto}" alt="foto">`:'<div class="hall-foto" style="display:flex;align-items:center;justify-content:center;font-size:24px">📷</div>'}
+      <div class="hall-body">
+        <div class="hall-titulo">${h.titulo}</div>
+        <div style="font-size:11.5px;color:#64748b;margin-bottom:5px">📍 ${h.ubicacion||'Sin ubicar'}</div>
+        <div class="hall-desc">${h.descripcion||''}</div>
+        <div><span class="badge badge-${h.prioridad.toLowerCase()}">${h.prioridad}</span><span class="badge badge-${h.estado.toLowerCase().replace(' ','-')}">${h.estado}</span><span class="badge badge-area">${h.area}</span></div>
+      </div>
+    </div>`).join('')}
+  </div>`:''}
+  <div class="section">
+    <div class="section-title">✍️ Firmas</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:2rem;margin-top:1rem">
+      <div class="firma-box"><div class="firma-line">${insp.inspector||'Eric Antilef'}<br><small>Inspector Técnico · EA Ingenierías</small></div></div>
+      <div class="firma-box"><div class="firma-line">Administrador / Representante<br><small>${insp.edificio}</small></div></div>
+    </div>
+  </div>
+</div>
+<div class="footer">EA INGENIERÍAS EIRL · Servicios de Ingeniería Eléctrica y Civil · eric.contacto@gmail.com<br>Este informe fue generado digitalmente el ${new Date().toLocaleDateString('es-CL')} y tiene validez como documento técnico.</div>
+</body></html>`;
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob([html],{type:'text/html;charset=utf-8'}));
+  a.download=`Informe_${insp.edificio.replace(/\s/g,'_')}_${insp.fecha}.html`;
+  a.click();
+  closeModal();
+}
+
+function descargarCotizacion(inspId){
+  const insp=S.inspecciones.find(x=>x.id===inspId);
+  if(!insp)return;
+  const items=insp._cotizItems||[];
+  const notas=document.getElementById('cotiz-notas')?.value||insp._cotizNotas||'';
+  insp._cotizNotas=notas;
+  saveI();
+  const total=items.reduce((s,it)=>s+(parseFloat(it.precio)||0),0);
+  const iva=total*.19;
+  const html=`<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Cotización — ${insp.edificio}</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Segoe UI',system-ui,sans-serif;background:#f8fafc;color:#0f172a;font-size:13px}
+  .header{background:#1B2559;color:#fff;padding:2rem 2.5rem;display:flex;justify-content:space-between;align-items:flex-start}
+  .empresa{font-size:20px;font-weight:800}
+  .subtitulo{font-size:12px;opacity:.6;margin-top:3px}
+  .doc-title{font-size:28px;font-weight:800;opacity:.9;margin-top:12px;letter-spacing:-.5px}
+  .doc-info{text-align:right;font-size:12px;opacity:.7}
+  .content{padding:2rem 2.5rem;max-width:900px;margin:0 auto}
+  .cliente-box{background:#fff;border:1px solid #e2e8f0;border-radius:10px;padding:1.25rem;margin-bottom:1.5rem;display:flex;justify-content:space-between}
+  table{width:100%;border-collapse:collapse;background:#fff;border:1px solid #e2e8f0;border-radius:10px;overflow:hidden}
+  th{background:#f8fafc;padding:10px 14px;font-size:11px;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:.05em;text-align:left;border-bottom:1px solid #e2e8f0}
+  td{padding:11px 14px;border-bottom:1px solid #e2e8f0;color:#0f172a;font-size:13px}
+  tr:last-child td{border-bottom:none}
+  .totales{background:#fff;border:1px solid #e2e8f0;border-radius:10px;padding:1.25rem;margin-top:1rem;max-width:350px;margin-left:auto}
+  .tot-row{display:flex;justify-content:space-between;padding:.5rem 0;font-size:13px;color:#475569;border-bottom:1px solid #f1f5f9}
+  .tot-final{display:flex;justify-content:space-between;padding:.75rem 0;font-size:16px;font-weight:800;color:#0f172a}
+  .notas{background:#fff;border:1px solid #e2e8f0;border-radius:10px;padding:1.25rem;margin-top:1rem}
+  .nota-item{display:flex;gap:8px;font-size:12.5px;color:#475569;padding:.35rem 0}
+  .footer{background:#f1f5f9;border-top:1px solid #e2e8f0;padding:1.25rem 2.5rem;text-align:center;font-size:11.5px;color:#94a3b8;margin-top:2rem}
+  @media print{body{background:#fff}}
+</style>
+</head>
+<body>
+<div class="header">
+  <div>
+    <div class="empresa">EA INGENIERÍAS</div>
+    <div class="subtitulo">EIRL · RUT 78.313.658-9 · Ingeniería Eléctrica y Civil</div>
+    <div class="doc-title">COTIZACIÓN</div>
+  </div>
+  <div class="doc-info">
+    <div style="font-size:16px;font-weight:700">N° COT-${String(Date.now()).slice(-6)}</div>
+    <div style="margin-top:4px">Fecha: ${new Date().toLocaleDateString('es-CL')}</div>
+    <div>Válida por 30 días</div>
+  </div>
+</div>
+<div class="content">
+  <div class="cliente-box">
+    <div>
+      <div style="font-size:11px;font-weight:700;color:#94a3b8;text-transform:uppercase;margin-bottom:6px">Cliente</div>
+      <div style="font-size:16px;font-weight:700;color:#0f172a">${insp.edificio}</div>
+      ${insp.tipoEdificio?`<div style="font-size:12px;color:#64748b;margin-top:2px">${insp.tipoEdificio}${insp.pisos?' · '+insp.pisos+' pisos':''}</div>`:''}
+    </div>
+    <div style="text-align:right">
+      <div style="font-size:11px;font-weight:700;color:#94a3b8;text-transform:uppercase;margin-bottom:6px">Ref. Inspección</div>
+      <div style="font-size:13px;font-weight:600;color:#0f172a">${insp.fecha}</div>
+      <div style="font-size:12px;color:#64748b">${insp.inspector||'Eric Antilef'}</div>
+    </div>
+  </div>
+  <table>
+    <thead><tr><th style="width:50px">#</th><th>Descripción del trabajo</th><th style="width:60px">Und.</th><th style="width:120px;text-align:right">Precio neto</th></tr></thead>
+    <tbody>
+      ${items.map((it,idx)=>`<tr>
+        <td style="color:#94a3b8;font-weight:600">${idx+1}</td>
+        <td><div style="font-weight:600;color:#0f172a">${it.titulo}</div>${it.desc?`<div style="font-size:12px;color:#64748b;margin-top:2px">${it.desc}</div>`:''}</td>
+        <td>${it.und||'GL'}</td>
+        <td style="text-align:right;font-weight:600">$${(parseFloat(it.precio)||0).toLocaleString('es-CL')}</td>
+      </tr>`).join('')}
+    </tbody>
+  </table>
+  <div class="totales">
+    <div class="tot-row"><span>Subtotal neto</span><span>$${total.toLocaleString('es-CL')}</span></div>
+    <div class="tot-row"><span>IVA 19%</span><span>$${Math.round(iva).toLocaleString('es-CL')}</span></div>
+    <div class="tot-final"><span>TOTAL</span><span>$${Math.round(total+iva).toLocaleString('es-CL')}</span></div>
+  </div>
+  ${notas?`<div class="notas">
+    <div style="font-size:12px;font-weight:700;color:#0f172a;margin-bottom:.75rem;text-transform:uppercase;letter-spacing:.05em">Condiciones</div>
+    ${notas.split('\n').filter(l=>l.trim()).map(l=>`<div class="nota-item"><span style="color:#2563EB">•</span><span>${l.replace(/^•\s*/,'')}</span></div>`).join('')}
+  </div>`:''}
+  <div style="margin-top:2rem;display:grid;grid-template-columns:1fr 1fr;gap:2rem">
+    <div style="border:1.5px solid #e2e8f0;border-radius:10px;padding:1.5rem;text-align:center;min-height:80px;display:flex;flex-direction:column;justify-content:flex-end">
+      <div style="border-top:1px solid #cbd5e1;padding-top:.5rem;font-size:12px;color:#64748b">Eric Antilef · EA Ingenierías EIRL</div>
+    </div>
+    <div style="border:1.5px solid #e2e8f0;border-radius:10px;padding:1.5rem;text-align:center;min-height:80px;display:flex;flex-direction:column;justify-content:flex-end">
+      <div style="border-top:1px solid #cbd5e1;padding-top:.5rem;font-size:12px;color:#64748b">Administración / Representante</div>
+    </div>
+  </div>
+</div>
+<div class="footer">EA INGENIERÍAS EIRL · RUT 78.313.658-9 · eric.contacto@gmail.com · Coronel, Región del Biobío</div>
+</body></html>`;
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob([html],{type:'text/html;charset=utf-8'}));
+  a.download=`Cotizacion_${insp.edificio.replace(/\s/g,'_')}_${new Date().toISOString().slice(0,10)}.html`;
+  a.click();
+  closeModal();
+}
+
+loadData();
+render();
+</script>
+</body>
+</html>
